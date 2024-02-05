@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_miniproject/views/about.dart';
 import 'package:flutter_miniproject/views/home.dart';
 import 'package:flutter_miniproject/views/profile.dart';
+import 'package:http/http.dart' as http;
+
 class DashboardPage extends StatefulWidget {
   final String title;
   const DashboardPage({super.key, required this.title});
@@ -11,6 +13,22 @@ class DashboardPage extends StatefulWidget {
 }
 
 class _DashboardPageState extends State<DashboardPage> {
+  final List _listdata = [];
+  // =============Read Data==============
+  Future<void> ReadData() async {
+    const url = "http://192.168.1.9/crud-api/controllers/readData.php";
+    final res = await http.get(Uri.parse(url));
+    if (res.statusCode == 200) {
+      debugPrint(res.body);
+    }
+  }
+
+  @override
+  void initState() {
+    ReadData();
+    super.initState();
+  }
+
   late final String titleMenu;
   late final GestureTapCallback onTap;
   @override
@@ -36,8 +54,8 @@ class _DashboardPageState extends State<DashboardPage> {
             ListTile(
               leading: const Icon(Icons.home),
               title: const Text("Dashboard"),
-              onTap: () {
-                Navigator.push(
+              onTap: () async {
+                await Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (context) =>
@@ -65,7 +83,8 @@ class _DashboardPageState extends State<DashboardPage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const AboutPage(title: "Profile Page"),
+                    builder: (context) =>
+                        const AboutPage(title: "Profile Page"),
                   ),
                 );
               },
@@ -82,36 +101,39 @@ class _DashboardPageState extends State<DashboardPage> {
           children: [
             CardWidget(
               titleMenu: 'RESTful API',
-              onTap: () {
-                Navigator.push(
+              onTap: () async {
+                await Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (context) => const HomePage(title: "RESTful API"),
                   ),
                 );
+                debugPrint("Dashboard Page");
               },
             ),
             CardWidget(
               titleMenu: 'About Page',
-              onTap: () {
-                Navigator.push(
+              onTap: () async {
+                await Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (context) => const AboutPage(title: "About Page"),
                   ),
                 );
+                debugPrint("About Page");
               },
             ),
             CardWidget(
               titleMenu: 'Profile Page',
-              onTap: () {
-                Navigator.push(
+              onTap: () async {
+                await Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (context) =>
                         const ProfilePage(title: "Profile Page"),
                   ),
                 );
+                debugPrint("Profile Page");
               },
             ),
           ],
